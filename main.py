@@ -3,24 +3,10 @@ from selenium.webdriver.chrome.options import Options
 import time
 import pandas as pd
 
-
-import requests
-import json
-
-# parse the cookie string into a dictionary
-cookie_str = [Redacted]
-# construct cookies dict from the string
-cookies = {}
-for item in cookie_str.split('; '):
-    if '=' in item:
-        key, value = item.split('=', 1)
-        cookies[key] = value
-
-
 try:
     print("Loading brackets from CSV...")
     brackets = pd.read_csv(r"C:\Users\Patrick Taylor\Downloads\Bracket_Standings_Report (1).csv")
-    entries = dict(zip(brackets.ID, brackets.Entry))
+    entries = tuple(zip(brackets.ID, brackets.Entry))
     print(f"Found {len(entries)} brackets to process")
     
     # setup chrome options
@@ -47,7 +33,7 @@ try:
     failed = 0
     print("Beginning to process brackets...")
     
-    for k, v in entries.items():
+    for (k, v) in entries:
         try:
             print(f"Processing bracket {processed+failed+1}/{len(entries)}: ID={k}, Entry={v}")
             driver.get(f"https://www.runyourpool.com/MarchMadness/ncaa_bracket/bracket/view_bracket.cfm?t={k}&s={v}")
